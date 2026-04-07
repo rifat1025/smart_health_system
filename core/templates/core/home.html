@@ -1,0 +1,161 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Medical AI Assistant</h1>
+        <p class="text-muted">Chat with AI and upload medical images for analysis</p>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-8 offset-md-2">
+
+            <div class="card shadow-sm border-0">
+
+                <!-- CHAT BOX -->
+                <div id="chatBox" class="p-3"
+                     style="height: 420px; overflow-y: auto; background: #f8f9fa;">
+
+                    <div class="text-muted text-center">
+                        Start conversation with AI assistant...
+                    </div>
+
+                </div>
+
+                <!-- IMAGE PREVIEW -->
+                <div id="previewBox" class="p-2 text-center"></div>
+
+                <!-- INPUT AREA -->
+                <div class="card-footer bg-white">
+
+                    <!-- IMAGE INPUT -->
+                    <input type="file" id="imageInput" class="form-control mb-2" accept="image/*">
+
+                    <!-- TEXT INPUT -->
+                    <div class="input-group">
+
+                        <input type="text" id="userInput" class="form-control"
+                               placeholder="Ask medical question...">
+
+                        <button class="btn btn-primary" onclick="sendMessage()">
+                            Send
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let selectedImage = null;
+
+// Show image preview
+document.getElementById("imageInput").addEventListener("change", function(event) {
+    selectedImage = event.target.files[0];
+
+    let previewBox = document.getElementById("previewBox");
+
+    if (selectedImage) {
+        let url = URL.createObjectURL(selectedImage);
+
+        previewBox.innerHTML = `
+            <img src="${url}" width="120" class="rounded shadow">
+            <p class="text-muted">Image ready to send</p>
+        `;
+    }
+});
+
+// Add chat message
+function addMessage(sender, message) {
+    let chatBox = document.getElementById("chatBox");
+
+    let div = document.createElement("div");
+    div.classList.add("mb-2");
+
+    if (sender === "user") {
+        div.innerHTML = `
+            <div class="text-end">
+                <span class="badge bg-primary">You</span>
+                <div class="bg-primary text-white p-2 rounded d-inline-block mt-1">
+                    ${message}
+                </div>
+            </div>
+        `;
+    } else {
+        div.innerHTML = `
+            <div class="text-start">
+                <span class="badge bg-success">AI</span>
+                <div class="bg-light border p-2 rounded d-inline-block mt-1">
+                    ${message}
+                </div>
+            </div>
+        `;
+    }
+
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Send message + image
+function sendMessage() {
+    let text = document.getElementById("userInput").value;
+
+    if (!text && !selectedImage) return;
+
+    addMessage("user", text || "Image uploaded");
+
+    let formData = new FormData();
+    formData.append("message", text);
+
+    if (selectedImage) {
+        formData.append("image", selectedImage);
+    }
+
+    document.getElementById("userInput").value = "";
+    document.getElementById("imageInput").value = "";
+    document.getElementById("previewBox").innerHTML = "";
+    selectedImage = null;
+
+    fetch("/chat-api/", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        addMessage("ai", data.response);
+    });
+}
+
+// CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+
+{% endblock %}

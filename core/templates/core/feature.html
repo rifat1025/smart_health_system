@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Medical AI Dashboard</h1>
+        <p class="text-muted">AI-powered assistant for doctors to analyze medical images and reports</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4">
+
+        <!-- Upload Image -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>📤 Upload Scan</h4>
+                    <p class="text-muted">Upload X-ray, MRI or CT scan for AI analysis</p>
+                    <a href="/upload/" class="btn btn-primary w-100">Start Analysis</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analysis -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>🧠 AI Analysis</h4>
+                    <p class="text-muted">Get disease prediction with confidence score</p>
+                    <a href="/api/analyze/" class="btn btn-success w-100">View API</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>📊 Reports</h4>
+                    <p class="text-muted">View previous patient reports and history</p>
+                    <a href="/reports/" class="btn btn-warning w-100">Open Reports</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Assistant -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>💬 AI Assistant</h4>
+                    <p class="text-muted">Ask medical questions and get AI suggestions</p>
+                    <a href="/chat/" class="btn btn-info w-100">Start Chat</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Records -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>🧾 Patients</h4>
+                    <p class="text-muted">Manage patient records and medical history</p>
+                    <a href="/patients/" class="btn btn-dark w-100">View Patients</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                    <h4>⚙️ Settings</h4>
+                    <p class="text-muted">Configure AI model and system settings</p>
+                    <a href="/admin/" class="btn btn-danger w-100">Open Admin</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer Info -->
+    <div class="text-center mt-5 text-muted">
+        <small>AI Medical Assistant System • For Doctor Use Only</small>
+    </div>
+
+</div>
+
+{% endblock %}
